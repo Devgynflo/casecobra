@@ -25,9 +25,8 @@ export default function Home() {
                 <Image src={snake1Img} alt="snake" className="w-full" />
               </div>
               <h1 className="relative mt-16 w-fit text-balance text-5xl font-bold !leading-tight tracking-tight text-gray-900 md:text-6xl lg:text-7xl">
-                Votre photo sur un{" "}
-                <span className="bg-green-600 px-2 text-white">Téléphone</span>{" "}
-                personnalisé
+                Votre photo personnalisé sur votre{" "}
+                <span className="bg-green-600 px-2 text-white"> téléphone</span>{" "}
               </h1>
               <p className="mt-8 max-w-prose text-balance text-center text-lg md:text-wrap lg:pr-10 lg:text-left">
                 Immortalisez vos souvenirs préférés avec votre,{" "}
