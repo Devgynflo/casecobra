@@ -18,13 +18,22 @@ export const Footer: NextPage<FooterProps> = ({}) => {
 
           <div className="flex items-center justify-center">
             <div className="flex space-x-8">
-              <Link href={"/"} className="text-sm text-muted-foreground">
+              <Link
+                href={"/"}
+                className="text-sm text-muted-foreground transition hover:text-gray-600"
+              >
                 Teams
               </Link>
-              <Link href={"/"} className="text-sm text-muted-foreground">
+              <Link
+                href={"/"}
+                className="text-sm text-muted-foreground transition hover:text-gray-600"
+              >
                 Privacy Policy
               </Link>
-              <Link href={"/"} className="text-sm text-muted-foreground">
+              <Link
+                href={"/"}
+                className="text-sm text-muted-foreground transition hover:text-gray-600"
+              >
                 Cookies Policy
               </Link>
             </div>
