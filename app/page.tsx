@@ -1,6 +1,9 @@
 import { MaxWidthWrapper } from "@/components/max-width-wrapper";
 import Image from "next/image";
 
+import arrow from "@/public/arrow.png";
+import horse from "@/public/horse.jpg";
+import horseM from "@/public/horse_phone.jpg";
 import lineImg from "@/public/line.png";
 import snake1Img from "@/public/snake-1.png";
 import snake2Img from "@/public/snake-2.png";
@@ -15,7 +18,9 @@ import yourImg from "@/public/your-image.png";
 import { Icons } from "@/components/Icons";
 import { Phone } from "@/components/phone";
 import { Reviews } from "@/components/reviews";
-import { Check, Star } from "lucide-react";
+import { buttonVariants } from "@/components/ui/button";
+import { ArrowRight, Check, Star } from "lucide-react";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -220,6 +225,73 @@ export default function Home() {
         <div className="pt-16">
           <Reviews />
         </div>
+      </section>
+
+      <section>
+        <MaxWidthWrapper className="py-24">
+          <div className="mb-12 px-6 lg:px-8">
+            <div className="mx-auto max-w-2xl sm:text-center">
+              <h2 className="order-1 mt-2 text-balance text-center text-5xl font-bold !leading-tight tracking-tight text-gray-900 md:text-6xl">
+                Téléchargez votre photo et obtenez{" "}
+                <span className="relative bg-green-600 px-2 text-white">
+                  l&apos;étui de votre téléphone{" "}
+                </span>{" "}
+                maintenant
+              </h2>
+            </div>
+          </div>
+
+          <div className="mx-auto max-w-6xl px-6 lg:px-8">
+            <div className="relative flex flex-col items-center gap-40 md:grid md:grid-cols-2">
+              <Image
+                src={arrow}
+                alt="fleche"
+                aria-disabled
+                className="absolute left-1/2 top-[25rem] z-10 -translate-x-1/2 -translate-y-1/2 rotate-90 md:top-1/2 md:rotate-0"
+              />
+              <div className="relative h-80 w-full max-w-sm rounded-xl bg-gray-900/5 ring-inset ring-gray-900/10 md:h-full md:justify-self-end lg:rounded-2xl">
+                <Image
+                  alt="Illustration d'un cheval"
+                  src={horse}
+                  className="h-full w-full rounded-md bg-white object-cover shadow-2xl ring-1 ring-gray-900/10"
+                />
+              </div>
+              <Phone imgSrc={horseM} className="w-60" />
+            </div>
+          </div>
+
+          <ul className="mx-auto mt-12 w-fit max-w-prose space-y-2 sm:text-lg">
+            <li className="w-fit">
+              <Check className="mr-1.5 inline size-5 text-green-600" />
+              Composant durable de haute qualité
+            </li>
+            <li className="w-fit">
+              <Check className="mr-1.5 inline size-5 text-green-600" />
+              Revêtement résistant à l&apos;abrasion et aux empreintes digitales
+            </li>
+            <li className="w-fit">
+              <Check className="mr-1.5 inline size-5 text-green-600" />
+              Compatible avec la recharge sans fil
+            </li>
+            <li className="w-fit">
+              <Check className="mr-1.5 inline size-5 text-green-600" />
+              Garantie d&apos;impression de 5 ans
+            </li>
+
+            <div className="flex justify-center">
+              <Link
+                href={"/configure/upload"}
+                className={buttonVariants({
+                  size: "lg",
+                  className: "mx-auto mt-8",
+                })}
+              >
+                Créer votre étui maintenant{" "}
+                <ArrowRight className="ml-1.5 size-4" />
+              </Link>
+            </div>
+          </ul>
+        </MaxWidthWrapper>
       </section>
     </div>
   );
