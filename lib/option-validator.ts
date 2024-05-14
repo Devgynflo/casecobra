@@ -1,5 +1,7 @@
 // Ne pas supprimer ,hack, tailwinnd ne supporte pas les imports dynamiques
 
+import { PRODUCT_PRICES } from "@/config/products";
+
 // bg-blue-950 border-blue-950
 // bg-zinc-900 border-zinc-900
 // bg-rose-950 border-rose-950
@@ -43,4 +45,42 @@ export const MODELS = {
       value: 'iphon15'
     }
   ]
-}
+} as const;
+
+export const MATERIALS = {
+  name: 'composant',
+  options: [
+    {
+      label: "Silicone",
+      value: "silicone",
+      description: undefined,
+      price: PRODUCT_PRICES.material.silicone
+    },
+     {
+      label: "Polycarbonate",
+      value: "polycarbonate",
+      description: "Revêtement résistant aux rayures",
+      price: PRODUCT_PRICES.material.polycarbonate
+    }
+  ]
+}as const 
+
+export const FINISHES = {
+  name: 'finition',
+  options: [
+    {
+      label: "Finition lisse",
+      value: "smooth",
+      description: undefined,
+      price: PRODUCT_PRICES.finish.smooth
+    },
+     {
+      label: "Fini texturé",
+      value: "textured",
+      description: "Texture souple et adhérente",
+      price: PRODUCT_PRICES.finish.textured
+    }
+  ]
+}as const 
+
+
