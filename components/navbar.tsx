@@ -17,7 +17,7 @@ export const Navbar: NextPage<Props> = async ({}) => {
       <MaxWidthWrapper>
         <div className="flex h-14 items-center justify-between border-b border-zinc-200">
           <Link href={"/"} className="z-40 flex font-semibold">
-            case<span className="text-green-600">cobra</span>
+            coque<span className="text-green-600">cobra</span>
           </Link>
           <div className="flex h-full items-center space-x-4">
             {user ? (
@@ -50,7 +50,7 @@ export const Navbar: NextPage<Props> = async ({}) => {
                     className: "hidden items-center gap-1 sm:flex",
                   })}
                 >
-                  Créer un étui
+                  Créer une coque
                   <ArrowRight className="ml-1.5 size-5" />
                 </Link>
               </>
@@ -80,7 +80,7 @@ export const Navbar: NextPage<Props> = async ({}) => {
                     className: "hidden items-center gap-1 sm:flex",
                   })}
                 >
-                  Créer un étui
+                  Créer une coque
                   <ArrowRight className="ml-1.5 size-5" />
                 </Link>
               </>

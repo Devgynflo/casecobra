@@ -37,9 +37,9 @@ export default function Home() {
                 <span className="bg-green-600 px-2 text-white"> téléphone</span>{" "}
               </h1>
               <p className="mt-8 max-w-prose text-balance text-center text-lg md:text-wrap lg:pr-10 lg:text-left">
-                Immortalisez vos souvenirs préférés avec votre,{" "}
-                <span className="font-semibold">l&apos;un des </span> étuis de
-                téléphone. CaseCobra vous permet de protéger vos souvenirs, mais
+                Immortalisez vos souvenirs préférés avec votre{" "}
+                <span className="font-semibold">coque</span> de
+                téléphone. CoqueCobra vous permet de protéger vos souvenirs, mais
                 pas seulement...
               </p>
               <ul className="mt-8 flex flex-col items-center  space-y-2 text-left font-medium sm:items-start">
@@ -234,7 +234,7 @@ export default function Home() {
               <h2 className="order-1 mt-2 text-balance text-center text-5xl font-bold !leading-tight tracking-tight text-gray-900 md:text-6xl">
                 Téléchargez votre photo et obtenez{" "}
                 <span className="relative bg-green-600 px-2 text-white">
-                  l&apos;étui de votre téléphone{" "}
+                  la coque de votre téléphone{" "}
                 </span>{" "}
                 maintenant
               </h2>
@@ -286,7 +286,7 @@ export default function Home() {
                   className: "mx-auto mt-8",
                 })}
               >
-                Créer votre étui maintenant{" "}
+                Créer votre coque maintenant{" "}
                 <ArrowRight className="ml-1.5 size-4" />
               </Link>
             </div>

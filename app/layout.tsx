@@ -8,8 +8,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Casecobra-shop",
-  description: "Ecommerce case",
+  title: "Coquecobra-shop",
+  description: "Ecommerce coque de téléphone",
 };
 
 export default function RootLayout({
