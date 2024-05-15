@@ -5,3 +5,13 @@ services:
       POSTGRES_PASSWORD: eexouthe
     ports:
       - "5432:5432"
+  # nextjs:
+  #  build:
+  #    context: .
+  #    dockerfile: Dockerfile
+  #  ports:
+  #    - "80:3000"
+  #  env_file:
+  #    - .env
+  #  depends_on:
+  #    - db

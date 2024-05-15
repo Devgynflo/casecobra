@@ -10,9 +10,17 @@ import { COLORS, FINISHES, MATERIALS, MODELS } from "@/lib/option-validator";
 import { cn, formatPrice } from "@/lib/utils";
 import { RadioGroup } from "@headlessui/react";
 
-import { Check, ChevronsUpDown } from "lucide-react";
+import {
+  SaveConfigArgs,
+  _saveConfig,
+} from "@/app/(routes)/configure/design/actions";
+import { BASE_PRICE } from "@/config/products";
+import { useUploadThing } from "@/lib/uploadthing";
+import { useMutation } from "@tanstack/react-query";
+import { ArrowRight, Check, ChevronsUpDown } from "lucide-react";
 import NextImage from "next/image";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useRef, useState } from "react";
 import { Rnd } from "react-rnd";
 import { Button } from "../ui/button";
 import {
@@ -21,6 +29,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import { useToast } from "../ui/use-toast";
 
 interface DesignConfiguratorProps {
   configId: string;
@@ -33,23 +42,124 @@ export const DesignConfigurator = ({
   imageUrl,
   imageDimensions,
 }: DesignConfiguratorProps) => {
+  const { startUpload } = useUploadThing("imageUploader");
+  const router = useRouter();
+  const { mutate: saveConfig } = useMutation({
+    mutationKey: ["save-config"], // cache
+    mutationFn: async (args: SaveConfigArgs) => {
+      await Promise.all([saveConfiguration(), _saveConfig(args)]);
+    },
+    onError: () => {
+      toast({
+        title: "Quelque chose s'est mal passé",
+        description: "il y a eu une erreur de notre côté. Veuillez réessayer ",
+        variant: "destructive",
+      });
+    },
+    onSuccess: () => {
+      router.push(`/configure/preview?id=${configId}`);
+    },
+  });
+
+  const phoneCaseRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { toast } = useToast();
+  const [renderedDimension, setRenderedDimension] = useState({
+    width: imageDimensions.width / 4,
+    height: imageDimensions.height / 4,
+  });
+
+  const [renderedPosition, setRenderedPosition] = useState({
+    x: 150,
+    y: 205,
+  });
+
   const [options, setOptions] = useState<{
     color: (typeof COLORS)[number];
     model: (typeof MODELS.options)[number];
-    material: (typeof MATERIALS.options)[number];
-    finish: (typeof FINISHES.options)[number];
+    composant: (typeof MATERIALS.options)[number];
+    finition: (typeof FINISHES.options)[number];
   }>({
     color: COLORS[0],
     model: MODELS.options[0],
-    material: MATERIALS.options[0],
-    finish: FINISHES.options[0],
+    composant: MATERIALS.options[0],
+    finition: FINISHES.options[0],
   });
+
+  async function saveConfiguration() {
+    if (!phoneCaseRef.current || !containerRef.current) return;
+
+    try {
+      const {
+        left: caseLeft,
+        top: caseTop,
+        width,
+        height,
+      } = phoneCaseRef.current.getBoundingClientRect();
+      const { left: containerLeft, top: containerTop } =
+        containerRef.current.getBoundingClientRect();
+
+      const leftOffset = caseLeft - containerLeft;
+      const topOffset = caseTop - containerTop;
+
+      const actualX = renderedPosition.x - leftOffset;
+      const actualY = renderedPosition.y - topOffset;
+
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+
+      const ctx = canvas.getContext("2d");
+
+      const userImage = new Image();
+      userImage.crossOrigin = "anonymous";
+      userImage.src = imageUrl;
+      await new Promise((resolve) => (userImage.onload = resolve));
+
+      ctx?.drawImage(
+        userImage,
+        actualX,
+        actualY,
+        renderedDimension.width,
+        renderedDimension.height,
+      );
+
+      const base64 = canvas.toDataURL();
+      const base64Data = base64.split(",")[1];
+
+      const base64ToBlob = (base64: string, mimeType: string) => {
+        const byteCharacters = atob(base64);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        return new Blob([byteArray], { type: mimeType });
+      };
+
+      const blob = base64ToBlob(base64Data, "image/png");
+      const file = new File([blob], "filename.jpg", { type: "image/png" });
+
+      await startUpload([file], { configId });
+    } catch (err) {
+      toast({
+        title: "Quelque s'est mal passé !",
+        description:
+          "Ily a eu un problème avec votre configuration, essayez de nouveau",
+        variant: "destructive",
+      });
+    }
+  }
 
   return (
     <div className="relative mb-20 mt-20 grid grid-cols-1 pb-20 lg:grid-cols-3">
-      <div className="relative col-span-2 flex h-[37.5rem] w-full max-w-4xl items-center justify-center overflow-hidden rounded-lg border-2 border-dashed border-gray-300 p-12 text-center focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
+      <div
+        ref={containerRef}
+        className="relative col-span-2 flex h-[37.5rem] w-full max-w-4xl items-center justify-center overflow-hidden rounded-lg border-2 border-dashed border-gray-300 p-12 text-center focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+      >
         <div className="pointer-events-none relative aspect-[896/1831] w-60 bg-opacity-50">
           <AspectRatio
+            ref={phoneCaseRef}
             ratio={896 / 1831}
             className="pointer-events-none relative z-50 aspect-[896/1831] w-full"
           >
@@ -71,6 +181,18 @@ export const DesignConfigurator = ({
         </div>
 
         <Rnd
+          onResizeStop={(_, __, ref, ____, { x, y }) => {
+            setRenderedDimension({
+              height: parseInt(ref.style.height.slice(0, -2)), // '50px' => 50
+              width: parseInt(ref.style.width.slice(0, -2)),
+            });
+
+            setRenderedPosition({ x, y });
+          }}
+          onDragStop={(_, data) => {
+            const { x, y } = data;
+            setRenderedPosition({ x, y });
+          }}
           default={{
             x: 150,
             y: 205,
@@ -195,9 +317,12 @@ export const DesignConfigurator = ({
                   ({ name, options: selectableOptions }) => (
                     <RadioGroup
                       key={name}
-                      value={options[name as keyof typeof options]}
+                      value={options[name]}
                       onChange={(val) => {
-                        setOptions((prev) => ({ ...prev, [name]: val }));
+                        setOptions((prev) => ({
+                          ...prev,
+                          [name]: val,
+                        }));
                       }}
                     >
                       <Label>
@@ -220,30 +345,28 @@ export const DesignConfigurator = ({
                             <span className="flex items-center">
                               <span className="flex flex-col text-sm">
                                 <RadioGroup.Label
-                                  className={"font-medium text-gray-900"}
+                                  className="font-medium text-gray-900"
                                   as="span"
                                 >
                                   {option.label}
                                 </RadioGroup.Label>
 
-                                {option.description && (
+                                {option.description ? (
                                   <RadioGroup.Description
                                     as="span"
-                                    className={"text-gray-500"}
+                                    className="text-gray-500"
                                   >
                                     <span className="block sm:inline">
                                       {option.description}
                                     </span>
                                   </RadioGroup.Description>
-                                )}
+                                ) : null}
                               </span>
                             </span>
 
                             <RadioGroup.Description
                               as="span"
-                              className={
-                                "mt-2 flex text-sm sm:ml-4 sm:mt-0 sm:flex-col sm:text-right"
-                              }
+                              className="mt-2 flex text-sm sm:ml-4 sm:mt-0 sm:flex-col sm:text-right"
                             >
                               <span className="font-medium text-gray-900">
                                 {formatPrice(option.price / 100)}
@@ -259,6 +382,38 @@ export const DesignConfigurator = ({
             </div>
           </div>
         </ScrollArea>
+
+        <div className="h-16 w-full bg-white px-8">
+          <div className="h-px w-full bg-zinc-200" />
+          <div className="flex h-full w-full items-center justify-end">
+            <div className="flex w-full items-center gap-6">
+              <p className="whitespace-nowrap font-medium">
+                {formatPrice(
+                  (BASE_PRICE +
+                    options.finition.price +
+                    options.composant.price) /
+                    100,
+                )}
+              </p>
+              <Button
+                size={"sm"}
+                className="w-full"
+                onClick={() =>
+                  saveConfig({
+                    configId,
+                    color: options.color.value,
+                    finish: options.finition.value,
+                    material: options.composant.value,
+                    model: options.model.value,
+                  })
+                }
+              >
+                Continue
+                <ArrowRight className="ml-1.5 inline size-4" />
+              </Button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import { Footer } from "@/components/footer";
 import { Navbar } from "@/components/navbar";
 import { Toaster } from "@/components/ui/toaster";
+import TanstackProvider from "@/providers/tanstack-provider";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -22,7 +23,9 @@ export default function RootLayout({
       <body className={inter.className}>
         <Navbar />
         <main className="flex min-h-[calc(100vh-3.5rem-1px)] flex-col">
-          <div className="flex h-full flex-1 flex-col">{children}</div>
+          <div className="flex h-full flex-1 flex-col">
+            <TanstackProvider>{children}</TanstackProvider>
+          </div>
           <Footer />
         </main>
         <Toaster />
