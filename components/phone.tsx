@@ -26,7 +26,7 @@ export const Phone: NextPage<PhoneProps> = ({
       {...props}
     >
       <Image
-        className={cn("pointer-events-none z-50 overflow-hidden", className)}
+        className={cn("pointer-events-none z-50 overflow-hidden")}
         src={dark ? templatePhoneDark : templatePhone}
         alt="template"
       />
