@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "shad": "npx shadcn-ui@latest add"
+    "shad": "npx shadcn-ui@latest add",
+    "postinstall": "prisma genarate"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.19",
