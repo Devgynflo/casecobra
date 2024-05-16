@@ -4,12 +4,16 @@ import { BASE_PRICE, PRODUCT_PRICES } from "@/config/products";
 import { COLORS, MODELS } from "@/lib/option-validator";
 import { cn, formatPrice } from "@/lib/utils";
 import { Configuration } from "@prisma/client";
+import { useMutation } from "@tanstack/react-query";
 import { ArrowRight, Check } from "lucide-react";
 import { NextPage } from "next";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Confetti from "react-dom-confetti";
 import { Phone } from "../phone";
 import { Button } from "../ui/button";
+import { useToast } from "../ui/use-toast";
+import { createCheckoutSession } from "./actions";
 interface DesignPreviewProps {
   configuration: Configuration;
 }
@@ -17,10 +21,12 @@ interface DesignPreviewProps {
 export const DesignPreview: NextPage<DesignPreviewProps> = ({
   configuration,
 }) => {
+  const router = useRouter();
+  const { toast } = useToast();
   const [showConfetti, setShowConfetti] = useState(false);
   useEffect(() => setShowConfetti(true), []);
 
-  const { color, croppedImageUrl, model, finish, material } = configuration;
+  const { color, croppedImageUrl, model, finish, material, id } = configuration;
   const tw = COLORS.find((supportedColor) => supportedColor.value == color)?.tw;
   const { label: modelLabel } = MODELS.options.find(
     ({ value }) => value === model,
@@ -30,6 +36,25 @@ export const DesignPreview: NextPage<DesignPreviewProps> = ({
   if (material === "polycarbonate")
     totalPrice += PRODUCT_PRICES.material.polycarbonate;
   if (finish === "textured") totalPrice += PRODUCT_PRICES.finish.textured;
+
+  const { mutate: createPaymentSession } = useMutation({
+    mutationKey: ["get-checkout-session"],
+    mutationFn: createCheckoutSession,
+    onSuccess: ({ url }) => {
+      if (url) {
+        router.push(url);
+      } else {
+        throw new Error("Impossible de récupérer l'url de votre paiement");
+      }
+    },
+    onError: () => {
+      toast({
+        title: "Quelque chose s'est mal passé",
+        description: "Veuillez réessayer svp",
+        variant: "destructive",
+      });
+    },
+  });
 
   return (
     <>
@@ -123,7 +148,12 @@ export const DesignPreview: NextPage<DesignPreviewProps> = ({
             </div>
 
             <div className="mt-8 flex justify-end pb-12">
-              <Button className="px-4 sm:px-6 lg:px-8" onClick={() => {}}>
+              <Button
+                className="px-4 sm:px-6 lg:px-8"
+                onClick={() => {
+                  createPaymentSession({ configId: id });
+                }}
+              >
                 Paiement
                 <ArrowRight className="ml-1.5 size-4" />
               </Button>
