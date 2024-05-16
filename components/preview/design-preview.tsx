@@ -3,6 +3,7 @@
 import { BASE_PRICE, PRODUCT_PRICES } from "@/config/products";
 import { COLORS, MODELS } from "@/lib/option-validator";
 import { cn, formatPrice } from "@/lib/utils";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { Configuration } from "@prisma/client";
 import { useMutation } from "@tanstack/react-query";
 import { ArrowRight, Check } from "lucide-react";
@@ -10,10 +11,12 @@ import { NextPage } from "next";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Confetti from "react-dom-confetti";
+import { LoginModal } from "../login-modal";
 import { Phone } from "../phone";
 import { Button } from "../ui/button";
 import { useToast } from "../ui/use-toast";
 import { createCheckoutSession } from "./actions";
+
 interface DesignPreviewProps {
   configuration: Configuration;
 }
@@ -21,9 +24,13 @@ interface DesignPreviewProps {
 export const DesignPreview: NextPage<DesignPreviewProps> = ({
   configuration,
 }) => {
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
+
   const router = useRouter();
   const { toast } = useToast();
-  const [showConfetti, setShowConfetti] = useState(false);
+  const { user } = useKindeBrowserClient();
+
+  const [showConfetti, setShowConfetti] = useState<boolean>(false);
   useEffect(() => setShowConfetti(true), []);
 
   const { color, croppedImageUrl, model, finish, material, id } = configuration;
@@ -56,6 +63,15 @@ export const DesignPreview: NextPage<DesignPreviewProps> = ({
     },
   });
 
+  const handleCheckout = () => {
+    if (user) {
+      createPaymentSession({ configId: id });
+    } else {
+      localStorage.setItem("configurationId", id);
+      setIsLoginModalOpen(true);
+    }
+  };
+
   return (
     <>
       <div
@@ -67,6 +83,8 @@ export const DesignPreview: NextPage<DesignPreviewProps> = ({
           config={{ elementCount: 200, spread: 90 }}
         />
       </div>
+
+      <LoginModal isOpen={isLoginModalOpen} setIsOpen={setIsLoginModalOpen} />
 
       <div className="mt-20 grid grid-cols-1 text-sm sm:grid-cols-12 sm:grid-rows-1 sm:gap-x-1 md:gap-x-8 lg:gap-x-12">
         <div className="sm:col-span-4 md:col-span-3 md:row-span-2 md:row-end-2">
@@ -151,7 +169,7 @@ export const DesignPreview: NextPage<DesignPreviewProps> = ({
               <Button
                 className="px-4 sm:px-6 lg:px-8"
                 onClick={() => {
-                  createPaymentSession({ configId: id });
+                  handleCheckout();
                 }}
               >
                 Paiement

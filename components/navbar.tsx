@@ -23,6 +23,7 @@ export const Navbar: NextPage<Props> = async ({}) => {
             {user ? (
               <>
                 <Link
+                  prefetch={false}
                   href={"/api/auth/logout"}
                   className={buttonVariants({ size: "sm", variant: "ghost" })}
                 >
@@ -57,6 +58,7 @@ export const Navbar: NextPage<Props> = async ({}) => {
             ) : (
               <>
                 <Link
+                  prefetch={false}
                   href={"/api/auth/register"}
                   className={buttonVariants({ size: "sm", variant: "ghost" })}
                 >
@@ -64,6 +66,7 @@ export const Navbar: NextPage<Props> = async ({}) => {
                 </Link>
 
                 <Link
+                  prefetch={false}
                   href={"/api/auth/login"}
                   className={buttonVariants({
                     size: "sm",
