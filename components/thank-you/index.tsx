@@ -61,7 +61,7 @@ export const ThankYou: NextPage<ThankYouProps> = ({}) => {
             Votre coque de téléphone est en route!
           </h1>
           <p className="mt-2 text-base text-zinc-500">
-            Nous procédons à son envoie
+            Nous procéderons à son envoi dès que possible
           </p>
 
           <div className="mt-12 text-sm font-medium">
