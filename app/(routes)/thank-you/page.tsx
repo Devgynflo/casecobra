@@ -1,17 +1,16 @@
+import { ThankYou } from "@/components/thank-you";
 import { NextPage } from "next";
+import { Suspense } from "react";
 
-interface ThankYouPageProps {
-  searchParams: {
-    [key: string]: string | string[] | undefined;
-  };
-}
+interface ThankYouPageProps {}
 
-const ThankYouPage: NextPage<ThankYouPageProps> = ({ searchParams }) => {
-  const { orderId } = searchParams;
+const ThankYouPage: NextPage<ThankYouPageProps> = ({}) => {
   return (
-    <div>
-      <p>Tu as réussi , voici ta commande {orderId}</p>
-    </div>
+    <Suspense>
+      <div>
+        <ThankYou />
+      </div>
+    </Suspense>
   );
 };
 

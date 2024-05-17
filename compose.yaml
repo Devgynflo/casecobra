@@ -5,7 +5,7 @@ services:
       POSTGRES_PASSWORD: eexouthe
     ports:
       - "5432:5432"
-  # nextjs:
+  #nextjs:
   #  build:
   #    context: .
   #    dockerfile: Dockerfile
