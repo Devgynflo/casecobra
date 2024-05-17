@@ -4,6 +4,11 @@ import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
+import OrderReceivedEmail from "@/components/emails/order-received-email";
+import { Resend } from "resend";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+
 export async function POST(req: Request) {
   try {
     const body = await req.text();
@@ -41,7 +46,7 @@ export async function POST(req: Request) {
       const billingAddress = session.customer_details?.address;
       const shippingAddress = session.customer_details?.address;
 
-      await prisma.order.update({
+      const updatedOrder = await prisma.order.update({
         where: {
           id: orderId,
         },
@@ -70,6 +75,26 @@ export async function POST(req: Request) {
             },
           },
         },
+      });
+
+      await resend.emails.send({
+        from: "CoqueCobra <onboarding@resend.dev>",
+        to: [event.data.object.customer_details.email],
+        subject: "Merci pour votre commande",
+        react: OrderReceivedEmail({
+          orderId,
+          orderDate: updatedOrder.createdAt.toLocaleDateString(),
+          shippingAddress: {
+            id: orderId,
+            name: session.customer_details?.name! || "",
+            city: shippingAddress?.city! || "",
+            street: shippingAddress?.line1! || "",
+            postalCode: shippingAddress?.postal_code! || "",
+            country: shippingAddress?.country! || "",
+            phoneNumber: session.customer_details?.phone! || "",
+            state: shippingAddress?.state! || "FRANCE",
+          },
+        }),
       });
     }
 
