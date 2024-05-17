@@ -1,17 +1,14 @@
 import { Footer } from "@/components/footer";
 import { Navbar } from "@/components/navbar";
 import { Toaster } from "@/components/ui/toaster";
+import { conctructMetaData } from "@/lib/utils";
 import TanstackProvider from "@/providers/tanstack-provider";
-import type { Metadata } from "next";
 import { Recursive } from "next/font/google";
 import "./globals.css";
 
 const recursive = Recursive({ subsets: ["latin"] });
 
-export const metadata: Metadata = {
-  title: "Coquecobra-shop",
-  description: "Ecommerce coque de téléphone",
-};
+export const metadata = conctructMetaData();
 
 export default function RootLayout({
   children,

@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
@@ -39,7 +39,7 @@ enum CaseColor {
 }
 
 model Configuration {
-  id              String        @id @default(cuid())
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
   width           Int
   height          Int
   imageUrl        String
@@ -53,7 +53,7 @@ model Configuration {
 }
 
 model User {
-  id    String @id @default(cuid())
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
   email String
 
   Order Order[]
@@ -63,27 +63,27 @@ model User {
 }
 
 model Order {
-  id              String        @id @default(cuid())
-  configurationId String
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  configurationId String        @db.ObjectId
   configuration   Configuration @relation(fields: [configurationId], references: [id])
-  userId          String
+  userId          String        @db.ObjectId
   user            User          @relation(fields: [userId], references: [id])
   amount          Float
   isPaid          Boolean       @default(false)
   status          OrderStatus   @default(awaiting_shipment)
 
   shippingAddress   ShippingAddress? @relation(fields: [shippingAddressId], references: [id])
-  shippingAddressId String?
+  shippingAddressId String?          @db.ObjectId
 
   billingAddress   BillingAddress? @relation(fields: [billingAddressId], references: [id])
-  billingAddressId String?
+  billingAddressId String?         @db.ObjectId
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model ShippingAddress {
-  id          String  @id @default(cuid())
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   street      String
   city        String
@@ -96,7 +96,7 @@ model ShippingAddress {
 }
 
 model BillingAddress {
-  id          String  @id @default(cuid())
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   street      String
   city        String

@@ -1,9 +1,9 @@
-import { PRODUCT_PRICES } from "@/config/products";
-
 // Ne pas supprimer ,hack, tailwinnd ne supporte pas les imports dynamiques
 // bg-blue-950 border-blue-950
 // bg-zinc-900 border-zinc-900
 // bg-rose-950 border-rose-950
+
+import { PRODUCT_PRICES } from "@/config/products";
 
 export const COLORS = [
   { label: "Noir", value: "black", tw: "zinc-900" },

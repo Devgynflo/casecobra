@@ -23,7 +23,7 @@ const ConfigurePage: NextPage<ConfigurePageProps> = ({}) => {
 
   const { startUpload, isUploading } = useUploadThing("imageUploader", {
     onClientUploadComplete: ([data]) => {
-      console.log("🚀 ~ data:", data);
+      //console.log("🚀 ~ data:", data);
       const configId = data.serverData.configId;
       startTransition(() => {
         router.push(`/configure/design?id=${configId}`);
@@ -87,12 +87,12 @@ const ConfigurePage: NextPage<ConfigurePageProps> = ({}) => {
                 <Loader2 className="mb-2 size-6 animate-spin text-zinc-500" />
               ) : (
                 // eslint-disable-next-line jsx-a11y/alt-text
-                <Image className="mb-2 size-6 text-zinc-500" />
+                <Image className="mb-2 size-8 text-zinc-500" />
               )}
               <div className="mb-2 flex flex-col justify-center text-sm text-zinc-700">
                 {isUploading ? (
                   <div className="flex flex-col items-center">
-                    <p>Uploading...</p>
+                    <p>Téléchargement...</p>
                     <Progress
                       className="mt-2 h-2 w-40 bg-gray-300"
                       value={uploadProgress}
@@ -100,22 +100,29 @@ const ConfigurePage: NextPage<ConfigurePageProps> = ({}) => {
                   </div>
                 ) : isPending ? (
                   <div className="flex flex-col items-center">
-                    <p>Redirecting, please wait...</p>
+                    <p>Redirection, patientez...</p>
                   </div>
                 ) : isDragOver ? (
                   <p>
-                    <span className="font-semibold">Drop file</span>
-                    to upload
+                    <span className="font-semibold">
+                      Déposer un fichier à télécharger
+                    </span>
+                    à télécharger
                   </p>
                 ) : (
                   <p>
-                    <span className="font-semibold">Click to upload</span> or
-                    drag and drop
+                    <span className="font-semibold">
+                      Cliquez pour télécharger
+                    </span>{" "}
+                    ou glisser-déposer
                   </p>
                 )}
               </div>
               {!isPending && (
-                <p className="text-xs text-zinc-500">PNG, JPG,JPEG</p>
+                <>
+                  <p className="text-xs text-zinc-500">PNG, JPG,JPEG</p>
+                  <p className="mt-2 text-xs text-red-500">Inférieur à 4MB</p>
+                </>
               )}
             </div>
           )}

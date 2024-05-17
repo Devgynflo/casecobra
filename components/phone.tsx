@@ -26,12 +26,14 @@ export const Phone: NextPage<PhoneProps> = ({
       {...props}
     >
       <Image
+        priority
         className={cn("pointer-events-none z-50 overflow-hidden")}
         src={dark ? templatePhoneDark : templatePhone}
         alt="template"
       />
       <div className="absolute inset-0 -z-10">
         <Image
+          priority
           fill
           sizes="100"
           className="min-h-full min-w-full object-cover"

@@ -31,7 +31,7 @@ export async function POST(req: Request) {
 
       const session = event.data.object as Stripe.Checkout.Session;
       //TODO => fetch phone number
-      console.log("🚀 ~ POST ~ session:", session);
+      //console.log("🚀 ~ POST ~ session:", session);
       // preview/actions.ts
       // metadata fournies lors de la fonction createCheckoutSession()
       const { orderId, userId } = session.metadata || {
@@ -78,7 +78,7 @@ export async function POST(req: Request) {
       });
 
       await resend.emails.send({
-        from: "CoqueCobra <onboarding@resend.dev>",
+        from: "CoqueCobra <ginet.florian.dev.com>",
         to: [event.data.object.customer_details.email],
         subject: "Merci pour votre commande",
         react: OrderReceivedEmail({
