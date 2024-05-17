@@ -49,6 +49,6 @@ export function conctructMetaData({
       creator: "@gynflo.dev",
     },
     icons,
-    metadataBase: new URL("https://casecobra.vercel.app/"),
+    metadataBase: new URL("https://casecobra-plum.vercel.app/"),
   };
 }
