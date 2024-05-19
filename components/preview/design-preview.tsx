@@ -87,7 +87,7 @@ export const DesignPreview: NextPage<DesignPreviewProps> = ({
 
       <LoginModal isOpen={isLoginModalOpen} setIsOpen={setIsLoginModalOpen} />
 
-      <div className="flex-cols mt-20 flex items-center text-sm sm:grid-cols-12 sm:grid-rows-1 sm:gap-x-1 md:grid md:gap-x-8 lg:gap-x-12">
+      <div className="mt-20 flex flex-col items-center text-sm sm:grid-cols-12 sm:grid-rows-1 sm:gap-x-1 md:grid md:gap-x-8 lg:gap-x-12">
         <div className="md:col-span-4 md:row-span-2 md:row-end-2 lg:col-span-3">
           <Phone
             imgSrc={croppedImageUrl!}
